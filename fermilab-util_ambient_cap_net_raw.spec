@@ -1,31 +1,42 @@
-Name:		ambient_cap_net_raw
-Version:	0.1
+Name:		fermilab-util_ambient_cap_net_raw
+Version:	0.2
 Release:	1%{?dist}
+
+Provides:	ambient_cap_net_raw = %{version}-%{release}
 
 Summary:	A wrapper that runs a command with ambient cap_net_raw
 
 License:	GPLv3+
 URL:		http://servicedesk.fnal.gov
 
-Source0:	ambient_exec-2.c
+Source0:	ambient_cap_net_raw.tar.gz
 
 BuildRequires:	libcap-devel gcc
-Requires:	util-linux coreutils
+BuildRequires:  cmake >= 3.14 redhat-rpm-config
 
 %description
 A wrapper binary that runs a command with the ambient capibility of
 cap_net_raw.
 
 %prep
-echo 'nothing to do here'
+%setup -q -n ambient_cap_net_raw
 
 %build
-%{__cp} %{SOURCE0} ambient_cap_net_raw.c
-gcc %{optflags} -lcap-ng ambient_cap_net_raw.c
+%if 0%{?rhel} < 9 && 0%{?fedora} < 31
+mkdir build
+cd build
+%endif
+
+%cmake3 -Wdev -Wdeprecated ..
+%cmake_build
 
 %install
-rm -rf %{buildroot}
-%{__install} -D -pm 755 a.out %{buildroot}%{_libexecdir}/ambient_cap_net_raw
+%if 0%{?rhel} < 9 && 0%{?fedora} < 31
+cd build
+make install DESTDIR=%{buildroot}
+%else
+%cmake_install
+%endif
 
 %files
 %defattr(0644,root,root,0755)
@@ -34,5 +45,8 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %caps(cap_net_raw=p) %{_libexecdir}/ambient_cap_net_raw
 
 %changelog
+* Tue Jul 23 2024 Pat Riehecky <riehecky@fnal.gov> - 0.2-1
+- Port to libcap from libcap-ng
+
 * Tue Mar 17 2020 Ron Rechenmacher <ron@fnal.gov> - 0.1-1
 - Initial Build for RITM0946313

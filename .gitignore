@@ -1,0 +1,6 @@
+*.swp
+ambient_cap_net_raw.tar.gz
+build/*
+BUILD/*
+RPMS/*
+SRPMS/*
