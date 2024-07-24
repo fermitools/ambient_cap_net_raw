@@ -7,7 +7,7 @@ Provides:	ambient_cap_net_raw = %{version}-%{release}
 Summary:	A wrapper that runs a command with ambient cap_net_raw
 
 License:	GPLv3+
-URL:		http://servicedesk.fnal.gov
+URL:		https://github.com/fermitools/ambient_cap_net_raw
 
 Source0:	ambient_cap_net_raw.tar.gz
 
