@@ -1,6 +1,6 @@
 Name:		fermilab-util_ambient_cap_net_raw
 Version:	0.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 Provides:	ambient_cap_net_raw = %{version}-%{release}
 
@@ -13,6 +13,8 @@ Source0:	ambient_cap_net_raw.tar.gz
 
 BuildRequires:	libcap-devel gcc
 BuildRequires:  cmake >= 3.14 redhat-rpm-config
+
+Requires:	group(tcpdump)
 
 %description
 A wrapper binary that runs a command with the ambient capibility of
@@ -42,9 +44,12 @@ make install DESTDIR=%{buildroot}
 %defattr(0644,root,root,0755)
 # If you can edit the memory this allocates, you can redirect the caps
 #  but since this lets you run any command anyway... no extra harm here
-%attr(0755,root,root) %caps(cap_net_raw=p) %{_libexecdir}/ambient_cap_net_raw
+%attr(0750,root,tcpdump) %caps(cap_net_raw=p) %{_libexecdir}/ambient_cap_net_raw
 
 %changelog
+* Thu Aug 14 2025 Pat Riehecky <riehecky@fnal.gov> - 0.2-2
+- Restrict to members of the tcpdump group
+
 * Tue Jul 23 2024 Pat Riehecky <riehecky@fnal.gov> - 0.2-1
 - Port to libcap from libcap-ng
 
